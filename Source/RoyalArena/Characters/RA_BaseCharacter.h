@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "RA_BaseCharacter.generated.h"
 
+
 UCLASS(Abstract)
 class ROYALARENA_API ARA_BaseCharacter : public ACharacter
 {
