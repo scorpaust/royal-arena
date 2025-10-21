@@ -13,3 +13,8 @@ ARA_BaseCharacter::ARA_BaseCharacter()
 
 }
 
+UAbilitySystemComponent* ARA_BaseCharacter::GetAbilitySystemComponent() const
+{
+	return nullptr;
+}
+
