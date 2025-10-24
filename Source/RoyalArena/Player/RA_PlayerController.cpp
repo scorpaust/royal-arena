@@ -2,6 +2,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "GameFramework/Character.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 
 void ARA_PlayerController::SetupInputComponent()
 {
@@ -22,7 +24,9 @@ void ARA_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ThisClass::StopJumping);
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ThisClass::Look);
-	EnhancedInputComponent->BindAction(PrimaryAction, ETriggerEvent::Started, this, &ThisClass::Primary);
+	EnhancedInputComponent->BindAction(PrimaryAction, ETriggerEvent::Triggered, this, &ThisClass::Primary);
+	EnhancedInputComponent->BindAction(SecondaryAction, ETriggerEvent::Started, this, &ThisClass::Secondary);
+	EnhancedInputComponent->BindAction(TertiaryAction, ETriggerEvent::Started, this, &ThisClass::Tertiary);
 }
 
 void ARA_PlayerController::Jump()
@@ -64,5 +68,31 @@ void ARA_PlayerController::Look(const FInputActionValue& Value)
 
 void ARA_PlayerController::Primary()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Primary Action Triggered"));
+	// Fix: Use FGameplayTag::RequestGameplayTag to get the tag from string
+	ActivateAbility(FGameplayTag::RequestGameplayTag(FName(TEXT("RATags.RAAbilities.Primary"))));
 }
+
+void ARA_PlayerController::Secondary()
+{
+	// Fix: Use FGameplayTag::RequestGameplayTag to get the tag from string
+	ActivateAbility(FGameplayTag::RequestGameplayTag(FName(TEXT("RATags.RAAbilities.Secondary"))));
+}
+
+void ARA_PlayerController::Tertiary()
+{
+	// Fix: Use FGameplayTag::RequestGameplayTag to get the tag from string
+	ActivateAbility(FGameplayTag::RequestGameplayTag(FName(TEXT("RATags.RAAbilities.Tertiary"))));
+}
+
+void ARA_PlayerController::ActivateAbility(const FGameplayTag& AbilityTag) const
+{
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetCharacter());
+
+	// Fix: Pass ASC directly to IsValid, no cast needed
+	if (!IsValid(ASC)) return;
+
+	// Add your ability activation logic here
+
+	ASC->TryActivateAbilitiesByTag(AbilityTag.GetSingleTagContainer());
+}
+

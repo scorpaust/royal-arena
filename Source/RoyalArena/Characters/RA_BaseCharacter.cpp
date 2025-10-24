@@ -2,6 +2,7 @@
 
 
 #include "RA_BaseCharacter.h"
+#include "AbilitySystemComponent.h"
 
 ARA_BaseCharacter::ARA_BaseCharacter()
 {
@@ -16,5 +17,22 @@ ARA_BaseCharacter::ARA_BaseCharacter()
 UAbilitySystemComponent* ARA_BaseCharacter::GetAbilitySystemComponent() const
 {
 	return nullptr;
+}
+
+void ARA_BaseCharacter::GiveStartupAbilities()
+{
+	for (const auto& Ability : StartupAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Ability);
+
+		if (Ability)
+		{
+			UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+
+			if (!IsValid(ASC)) return;
+
+			ASC->GiveAbility(AbilitySpec);	
+		}
+	}	
 }
 

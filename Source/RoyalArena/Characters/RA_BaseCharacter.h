@@ -7,6 +7,10 @@
 #include "AbilitySystemInterface.h"
 #include "RA_BaseCharacter.generated.h"
 
+/**
+ * Forward declarations
+ */ 
+class UGameplayAbility;
 
 UCLASS(Abstract)
 class ROYALARENA_API ARA_BaseCharacter : public ACharacter, public IAbilitySystemInterface
@@ -18,5 +22,14 @@ public:
 	ARA_BaseCharacter();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+protected:
+
+	void GiveStartupAbilities();
+
+private:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Royal|Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 
 };

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "GameplayTagContainer.h" // Add this if not present
 #include "RA_PlayerController.generated.h"
 
 /**
@@ -43,6 +44,12 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Royal|Input|Abilities")
 	TObjectPtr<UInputAction> PrimaryAction;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Royal|Input|Abilities")
+	TObjectPtr<UInputAction> SecondaryAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Royal|Input|Abilities")
+	TObjectPtr<UInputAction> TertiaryAction;
+
 	void Jump();
 
 	void StopJumping();
@@ -52,4 +59,10 @@ private:
 	void Look(const FInputActionValue& Value);
 
 	void Primary();
+
+	void Secondary();
+
+	void Tertiary();
+
+	void ActivateAbility(const FGameplayTag& AbilityTag) const;
 };

@@ -66,10 +66,12 @@ void ARA_PlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	if (!IsValid(GetAbilitySystemComponent())) return;
+	if (!IsValid(GetAbilitySystemComponent()) || !HasAuthority()) return;
 
 	// Fix: Cast GetPlayerState() to AActor* for InitAbilityActorInfo
-	GetAbilitySystemComponent()->InitAbilityActorInfo(this, Cast<AActor>(GetPlayerState()));
+	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
+
+	GiveStartupAbilities();
 }
 
 void ARA_PlayerCharacter::OnRep_PlayerState()
@@ -79,5 +81,5 @@ void ARA_PlayerCharacter::OnRep_PlayerState()
 	if (!IsValid(GetAbilitySystemComponent())) return;
 
 	// Fix: Cast GetPlayerState() to AActor* for InitAbilityActorInfo
-	GetAbilitySystemComponent()->InitAbilityActorInfo(this, Cast<AActor>(GetPlayerState()));
+	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
 }
