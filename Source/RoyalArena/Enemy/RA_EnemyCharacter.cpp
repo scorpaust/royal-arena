@@ -2,13 +2,13 @@
 
 
 #include "RA_EnemyCharacter.h"
-#include "AbilitySystemComponent.h"
+#include "../AbilitySystem/RA_AbilitySystemComponent.h"
 
 ARA_EnemyCharacter::ARA_EnemyCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	AbilitySystemComponent = CreateDefaultSubobject<URA_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
 	AbilitySystemComponent->SetIsReplicated(true);
 

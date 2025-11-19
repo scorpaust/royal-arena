@@ -10,7 +10,7 @@
 * Forward Declarations
 */
 
-class UAbilitySystemComponent;
+class URA_AbilitySystemComponent;
 
 /**
  * 
@@ -33,5 +33,5 @@ protected:
 private:
 
 	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	TObjectPtr<URA_AbilitySystemComponent> AbilitySystemComponent;
 };

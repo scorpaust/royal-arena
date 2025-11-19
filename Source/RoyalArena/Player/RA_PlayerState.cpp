@@ -2,13 +2,13 @@
 
 
 #include "RA_PlayerState.h"
-#include "AbilitySystemComponent.h"
+#include "../AbilitySystem/RA_AbilitySystemComponent.h"
 
 ARA_PlayerState::ARA_PlayerState()
 {
 	SetNetUpdateFrequency(100.f);
 
-	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	AbilitySystemComponent = CreateDefaultSubobject<URA_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
 	AbilitySystemComponent->SetIsReplicated(true);
 

@@ -11,7 +11,7 @@
  * Forward Declarations
  */
 
-class UAbilitySystemComponent;
+class URA_AbilitySystemComponent;
 
 /**
  * 
@@ -30,5 +30,5 @@ public:
 private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Royal|Abilities")
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	TObjectPtr<URA_AbilitySystemComponent> AbilitySystemComponent;
 };
