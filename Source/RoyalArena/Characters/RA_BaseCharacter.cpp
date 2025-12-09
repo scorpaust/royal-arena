@@ -3,6 +3,9 @@
 
 #include "RA_BaseCharacter.h"
 #include "AbilitySystemComponent.h"
+#include "AttributeSet.h"
+#include "GameplayEffect.h"
+#include "Net/UnrealNetwork.h"
 
 ARA_BaseCharacter::ARA_BaseCharacter()
 {
@@ -34,5 +37,46 @@ void ARA_BaseCharacter::GiveStartupAbilities()
 			ASC->GiveAbility(AbilitySpec);	
 		}
 	}	
+}
+
+void ARA_BaseCharacter::InitializeAttributes() const
+{
+	checkf(IsValid(InitializeAttributesEffect), TEXT("InitializeAttributesEffect is not valid on %s. Please set the GameplayEffect used to initialize attributes in the Character Blueprint."), *GetName());
+
+	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+
+	FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(InitializeAttributesEffect, 1, ContextHandle);
+
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+}
+
+void ARA_BaseCharacter::OnHealthChanged(const FOnAttributeChangeData& AttributeChangeData)
+{
+	if (AttributeChangeData.NewValue <= 0.f && IsAlive())
+	{
+		HandleDeath();
+	}
+}
+
+void ARA_BaseCharacter::HandleDeath()
+{
+	bAlive = false;
+	
+	if (IsValid(GEngine))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("%s has died"), *GetName()));
+	}
+}
+
+void ARA_BaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	
+	DOREPLIFETIME(ARA_BaseCharacter, bAlive);
+}
+
+void ARA_BaseCharacter::HandleRespawn()
+{
+	bAlive = true;
 }
 

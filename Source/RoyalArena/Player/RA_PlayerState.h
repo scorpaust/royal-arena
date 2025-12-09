@@ -12,6 +12,7 @@
  */
 
 class URA_AbilitySystemComponent;
+class UAttributeSet;
 
 /**
  * 
@@ -26,9 +27,14 @@ public:
 	ARA_PlayerState();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	virtual UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 	
 private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Royal|Abilities")
 	TObjectPtr<URA_AbilitySystemComponent> AbilitySystemComponent;
+
+	UPROPERTY()
+	TObjectPtr<UAttributeSet> AttributeSet;
 };

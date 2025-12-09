@@ -11,6 +11,8 @@
 */
 
 class URA_AbilitySystemComponent;
+class UAttributeSet;
+class URA_AttributeSet;
 
 /**
  * 
@@ -25,6 +27,8 @@ public:
 	ARA_EnemyCharacter();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	virtual UAttributeSet* GetAttributeSet() const override;
 	
 protected:
 
@@ -34,4 +38,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<URA_AbilitySystemComponent> AbilitySystemComponent;
+
+	UPROPERTY()
+	TObjectPtr<URA_AttributeSet> AttributeSet;
 };

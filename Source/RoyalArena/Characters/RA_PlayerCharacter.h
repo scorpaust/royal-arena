@@ -12,6 +12,7 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UAttributeSet;
 
 /**
  * 
@@ -30,6 +31,8 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 
 	virtual void OnRep_PlayerState() override;
+
+	virtual UAttributeSet* GetAttributeSet() const override;
 
 private:
 

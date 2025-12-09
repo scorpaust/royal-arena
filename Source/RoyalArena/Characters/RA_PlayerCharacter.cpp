@@ -7,6 +7,9 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "AbilitySystemComponent.h"
+#include "GameplayEffect.h"	
+#include "RoyalArena/AbilitySystem/RA_AttributeSet.h"
+#include "RA_BaseCharacter.h"
 #include <RoyalArena/Player/RA_PlayerState.h>
 
 ARA_PlayerCharacter::ARA_PlayerCharacter()
@@ -71,7 +74,19 @@ void ARA_PlayerCharacter::PossessedBy(AController* NewController)
 	// Fix: Cast GetPlayerState() to AActor* for InitAbilityActorInfo
 	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
 
+	OnASCInitialized.Broadcast(GetAbilitySystemComponent(), GetAttributeSet());
+
+	InitializeAttributes();
+
 	GiveStartupAbilities();
+
+	URA_AttributeSet* RAAttributeSet = Cast<URA_AttributeSet>(GetAttributeSet());
+
+	if (!IsValid(RAAttributeSet)) return;
+
+	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(
+		RAAttributeSet->GetHealthAttribute()
+	).AddUObject(this, &ThisClass::OnHealthChanged);
 }
 
 void ARA_PlayerCharacter::OnRep_PlayerState()
@@ -82,4 +97,15 @@ void ARA_PlayerCharacter::OnRep_PlayerState()
 
 	// Fix: Cast GetPlayerState() to AActor* for InitAbilityActorInfo
 	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
+
+	OnASCInitialized.Broadcast(GetAbilitySystemComponent(), GetAttributeSet());
+}
+
+UAttributeSet* ARA_PlayerCharacter::GetAttributeSet() const
+{
+	ARA_PlayerState* RAPlayerState = Cast<ARA_PlayerState>(GetPlayerState());
+
+	if (!IsValid(RAPlayerState)) return nullptr;
+
+	return RAPlayerState->GetAttributeSet();
 }

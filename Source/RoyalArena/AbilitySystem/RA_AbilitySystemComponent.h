@@ -16,11 +16,17 @@ class ROYALARENA_API URA_AbilitySystemComponent : public UAbilitySystemComponent
 
 public:
 
-	URA_AbilitySystemComponent();
+	virtual void OnGiveAbility(FGameplayAbilitySpec& AbilitySpec) override;
 
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	
-protected:
+	virtual void OnRep_ActivateAbilities() override;
 
-	virtual void BeginPlay() override;
+	UFUNCTION(BlueprintCallable, Category = "Royal|Abilities")
+	void SetAbilityLevel(TSubclassOf<UGameplayAbility> AbilityClass, int32 NewLevel);
+
+	UFUNCTION(BlueprintCallable, Category = "Royal|Abilities")
+	void AddToAbilityLevel(TSubclassOf<UGameplayAbility> AbilityClass, int32 LevelToAdd = 1);
+
+private:
+
+	void HandleAutoActivatedAbility(const FGameplayAbilitySpec& AbilitySpec);
 };
