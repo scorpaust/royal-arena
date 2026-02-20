@@ -7,6 +7,11 @@
 #include "GameplayEffect.h"
 #include "Net/UnrealNetwork.h"
 
+namespace RoyalTags
+{
+	const FName Player = FName("Player");
+}
+
 ARA_BaseCharacter::ARA_BaseCharacter()
 {
  
@@ -61,11 +66,6 @@ void ARA_BaseCharacter::OnHealthChanged(const FOnAttributeChangeData& AttributeC
 void ARA_BaseCharacter::HandleDeath()
 {
 	bAlive = false;
-	
-	if (IsValid(GEngine))
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("%s has died"), *GetName()));
-	}
 }
 
 void ARA_BaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -78,5 +78,21 @@ void ARA_BaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 void ARA_BaseCharacter::HandleRespawn()
 {
 	bAlive = true;
+}
+
+void ARA_BaseCharacter::ResetAttributes()
+{
+	if (IsValid(GetAbilitySystemComponent()) && IsValid(ResetAttributesEffect))
+	{
+		FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+		
+		FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(ResetAttributesEffect, 1.f, ContextHandle);
+		
+		if (SpecHandle.IsValid() && SpecHandle.Data.IsValid())
+		{
+			GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		}
+
+	}
 }
 

@@ -4,6 +4,7 @@
 #include "RA_EnemyCharacter.h"
 #include "../AbilitySystem/RA_AttributeSet.h"
 #include "../AbilitySystem/RA_AbilitySystemComponent.h"
+#include "AIController.h"
 
 ARA_EnemyCharacter::ARA_EnemyCharacter()
 {
@@ -51,4 +52,13 @@ void ARA_EnemyCharacter::BeginPlay()
 	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(
 		RAAttributeSet->GetHealthAttribute()
 	).AddUObject(this, &ARA_EnemyCharacter::OnHealthChanged);
+}
+
+void ARA_EnemyCharacter::HandleDeath()
+{
+	AAIController* AIController = GetController<AAIController>();
+
+	if (!IsValid(AIController)) return;
+	
+	AIController->StopMovement();
 }

@@ -15,6 +15,7 @@ namespace RATags
 
 	namespace Events
 	{
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(KillScored, "RATags.Events.KillScored", "Tag for the KillScored event.")
 		namespace Enemy
 		{
 			UE_DEFINE_GAMEPLAY_TAG_COMMENT(HitReact, "RATags.Events.Enemy.HitReact", "Tag for enemy hit react event")

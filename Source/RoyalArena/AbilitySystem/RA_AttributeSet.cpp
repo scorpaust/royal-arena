@@ -3,6 +3,9 @@
 
 #include "RA_AttributeSet.h"
 #include "Net/UnrealNetwork.h"
+#include "GameplayEffectExtension.h" // Add this include at the top of the file
+#include "AbilitySystemBlueprintLibrary.h"
+#include "../GameplayTags/RATags.h"
 
 void URA_AttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -22,6 +25,28 @@ void URA_AttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 void URA_AttributeSet::PostGameplayEffectExecute( const FGameplayEffectModCallbackData& Data) 
 {
 	Super::PostGameplayEffectExecute(Data);
+
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
+	}
+	else if (Data.EvaluatedData.Attribute == GetManaAttribute())
+	{
+		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
+	}
+
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute() && GetHealth() <= 0.f)
+	{
+		FGameplayEventData Payload;
+
+		Payload.Instigator = Data.Target.GetAvatarActor();
+
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+			Data.EffectSpec.GetEffectContext().GetInstigator(),
+			RATags::Events::KillScored,
+			Payload);
+	}
+
 
 	if (!bAttributesInitialized)
 	{

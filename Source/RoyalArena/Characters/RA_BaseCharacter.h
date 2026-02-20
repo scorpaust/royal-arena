@@ -1,26 +1,22 @@
-// Dinis Miguel Costa - Todos os direitos reservados
+// Copyright Druid Mechanics
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
-#include "AbilitySystemComponent.h"
-#include "AttributeSet.h"
+#include "GameFramework/Character.h"
+
 #include "RA_BaseCharacter.generated.h"
 
-/**
- * Forward declarations
- */ 
+namespace RoyalTags
+{
+	extern ROYALARENA_API const FName Player;
+}
+
+struct FOnAttributeChangeData;
+class UAttributeSet;
 class UGameplayAbility;
 class UGameplayEffect;
-class UAttributeSet;
-class UAbilitySystemComponent;
-struct FOnAttributeChangeData;
-
-/**
- * Delegates
- */
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FASCInitialized, UAbilitySystemComponent*, ASC, UAttributeSet*, AS);
 
@@ -30,46 +26,40 @@ class ROYALARENA_API ARA_BaseCharacter : public ACharacter, public IAbilitySyste
 	GENERATED_BODY()
 
 public:
-
 	ARA_BaseCharacter();
-
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual UAttributeSet* GetAttributeSet() const { return nullptr; }
+	bool IsAlive() const { return bAlive; }
+	void SetAlive(bool bAliveStatus) { bAlive = bAliveStatus; }
 
-	virtual UAttributeSet* GetAttributeSet() const {
-		return nullptr;
-	}
-
-	UPROPERTY(BlueprintAssignable, Category = "Royal|Abilities")
+	UPROPERTY(BlueprintAssignable)
 	FASCInitialized OnASCInitialized;
 
-	bool IsAlive() const { return bAlive; }
-
-	void SetAlive(bool bAliveStatus) { this->bAlive = bAliveStatus; }
-
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
-	UFUNCTION(BlueprintCallable, Category = "Royal|Death")
+	UFUNCTION(BlueprintCallable, Category = "Crash|Death")
 	virtual void HandleRespawn();
 
+	UFUNCTION(BlueprintCallable, Category = "Crash|Attributes")
+	void ResetAttributes();
+
 protected:
-
 	void GiveStartupAbilities();
-
 	void InitializeAttributes() const;
 
 	void OnHealthChanged(const FOnAttributeChangeData& AttributeChangeData);
-
 	virtual void HandleDeath();
 
 private:
 
-	UPROPERTY(EditDefaultsOnly, Category = "Royal|Abilities")
+	UPROPERTY(EditDefaultsOnly, Category = "Crash|Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Royal|Effects")
+	UPROPERTY(EditDefaultsOnly, Category = "Crash|Effects")
 	TSubclassOf<UGameplayEffect> InitializeAttributesEffect;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Royal|Character", meta = (AllowPrivateAccess = "true"), Replicated)
-	bool bAlive = true;
+	UPROPERTY(EditDefaultsOnly, Category = "Crash|Effects")
+	TSubclassOf<UGameplayEffect> ResetAttributesEffect;
 
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Replicated)
+	bool bAlive = true;
 };

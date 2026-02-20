@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "NativeGameplayTags.h"
 
-
 namespace RATags
 {
 	namespace RAAbilities
@@ -17,10 +16,14 @@ namespace RATags
 	}
 
 	namespace Events
-	{
+	{		
+		UE_DECLARE_GAMEPLAY_TAG_EXTERN(KillScored);
+
 		namespace Enemy
 		{
 			UE_DECLARE_GAMEPLAY_TAG_EXTERN(HitReact);
 		}
 	}
 }
+
+	

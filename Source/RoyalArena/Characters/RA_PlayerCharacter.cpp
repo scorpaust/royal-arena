@@ -53,6 +53,8 @@ ARA_PlayerCharacter::ARA_PlayerCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	Tags.Add(RoyalTags::Player);
 }
 
 UAbilitySystemComponent* ARA_PlayerCharacter::GetAbilitySystemComponent() const

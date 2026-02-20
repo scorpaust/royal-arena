@@ -17,6 +17,18 @@ enum class EHitDirection: uint8
 	None UMETA(DisplayName = "None")
 };
 
+USTRUCT(BlueprintType)
+struct FClosestActorWithTagResult
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite)
+	TWeakObjectPtr<AActor> Actor;
+
+	UPROPERTY(BlueprintReadWrite)
+	float Distance = 0.f;
+};
+
 UCLASS()
 class ROYALARENA_API URA_BlueprintLibrary : public UBlueprintFunctionLibrary
 {
@@ -29,4 +41,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Royal Arena|Utils|Hit Direction")
 	static FName GetHitDirectionName(const EHitDirection HitDirection);
+
+	UFUNCTION(BlueprintCallable)
+	static FClosestActorWithTagResult FindClosestActorWithTag(UObject* WorldContextObject, const FVector& Origin, const FName& Tag);
 };
